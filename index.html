@@ -8,87 +8,91 @@
     var grade =d3.json('gradeData.json');
 
     grade.then(function(data){
-              drawChart(data);
+              drawChart(data,400,200);
+              drawChart(data,800,400);
+              drawChart(data,1600,800);
+
             }
         )
 
-    var drawChart =function(data){
 
-          // math variable
-          var screen={width:500,height:400};
-          var svg = d3.select("svg")
-                      .attr("width",screen.width)
-                      .attr("height",screen.height)
-          var margins = {top: 10, right: 10, bottom: 10, left: 10};
-          var width =screen.width - margins.left -margins.right;
-          var height =screen.height - margins.top-margins.bottom;
+    var drawChart =function(data,width,height){
+      var screen={width:width,height:height}
+      var margins = {top: height/20, right: width/8, bottom: height/10, left: width/8}
+      var svg=d3.select("body").append("svg")
+      svg.attr("width",screen.width)
+         .attr("height",screen.height)
 
-          // scale
-          var xScale = d3.scaleLinear()
-              .domain([0, 100])
-              .range([0,width]);
-          var yScale = d3.scaleLinear()
-              .domain([0, 100])
-              .range([height,0]);
-          var colors=d3.scaleOrdinal(d3.schemeAccent);
+         var width =screen.width - margins.left -margins.right;
+         var height =screen.height - margins.top-margins.bottom;
 
-          // draw chart
-          var plotLand = svg.append("g")
-                            .classed("plot",true)
-                            .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')')
+        // scale
+        var xScale = d3.scaleLinear()
+            .domain([0, 100])
+            .range([0,width]);
+        var yScale = d3.scaleLinear()
+            .domain([0, 100])
+            .range([height,0]);
+        var colors=d3.scaleOrdinal(d3.schemeAccent);
 
-
-          var students = plotLand.selectAll("g")
-                                 .data(data)
-                                 .enter()
-                                 .append("g")
-                                 .attr("fill",function(d){return colors(d.name)})
-
-          students.selectAll("circle")
-                  .data(function(d){return d.grades})
-                  .enter()
-                  .append("circle")
-                  .attr('cx',function(d,i){return xScale(i)})
-                  .attr('cy',function(d){return yScale(d)})
-                  .attr('r', 10)
+        // draw chart
+        var plotLand = svg.append("g")
+                          .classed("plot",true)
+                          .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')')
 
 
-          // legend
-          var legend = svg.append("g")
-                          .classed("legend",true)
-                          .attr('transform', 'translate(' + (width+margins.left) + ',' + margins.top + ')')
+        var students = plotLand.selectAll("g")
+                               .data(data)
+                               .enter()
+                               .append("g")
+                               .attr("fill",function(d){return colors(d.name)})
 
-          var legendLines=legend.selectAll("g")
-                                .data(data)
-                                .enter()
-                                .append("g")
-                                .classed("legendLines",true)
-                                .attr('transform', function(d,i){
-                                  return "translate(0,"+(i*20)+")"
-                                })
+        students.selectAll("circle")
+                .data(function(d){return d.grades})
+                .enter()
+                .append("circle")
+                .attr('cx',function(d,i){return xScale(i)*5})
+                .attr('cy',function(d){return yScale(d)})
+                .attr('r', function(){return width/80})
 
-          legendLines.append("rect")
-          .attr('x', 0)
-          .attr('y', 0)
-          .attr('width', 10)
-          .attr('height', 10)
-          .attr('fill', function(d){return colors(d.name)})
 
-          legendLines.append("text")
-          .attr('x', 20)
-          .attr('y', 0)
-          .text(function(d){return d.name})
+        // legend
+        var legend = svg.append("g")
+                        .classed("legend",true)
+                        .attr('transform', 'translate(' + (width+margins.left) + ',' + margins.top + ')')
 
-          var xAxis = d3.axisBottom(xScale);
-          svg.append("g").classed("xAxis",true)
-          .call(xAxis)
-          .attr('transform', 'translate(' + margins.left + ',' + (margins.top+height) + ')')
+        var legendLines=legend.selectAll("g")
+                              .data(data)
+                              .enter()
+                              .append("g")
+                              .classed("legendLines",true)
+                              .attr('transform', function(d,i){
+                                return "translate(0,"+(i*20)+")"
+                              })
 
-    }
+        legendLines.append("rect")
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', 10)
+        .attr('height', 10)
+        .attr('fill', function(d){return colors(d.name)})
+
+        legendLines.append("text")
+        .attr('x', 20)
+        .attr('y', 0)
+        .text(function(d){return d.name})
+
+        var xAxis = d3.axisBottom(xScale);
+        svg.append("g").classed("xAxis",true)
+        .call(xAxis)
+        .attr('transform', 'translate(' + margins.left + ',' + (margins.top+height+15) + ')')
+      }
+
 
   </script>
   <svg>
-    
+
   </svg>
+
 </body>
 </html>
