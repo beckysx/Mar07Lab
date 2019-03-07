@@ -1,6 +1,12 @@
 <html>
 <head>
   <script src="https://d3js.org/d3.v5.min.js"></script>
+  <style>
+    svg{
+      display: block;
+      font-size: 10px;
+    }
+  </style>
 </head>
 <body>
   <script type="text/javascript">
@@ -18,10 +24,12 @@
 
     var drawChart =function(data,width,height){
       var screen={width:width,height:height}
-      var margins = {top: height/20, right: width/8, bottom: height/10, left: width/8}
+      var margins = {top: 20, right: 40, bottom: 40, left: 20}
       var svg=d3.select("body").append("svg")
       svg.attr("width",screen.width)
          .attr("height",screen.height)
+
+         .style("display","block")
 
          var width =screen.width - margins.left -margins.right;
          var height =screen.height - margins.top-margins.bottom;
@@ -59,7 +67,7 @@
         // legend
         var legend = svg.append("g")
                         .classed("legend",true)
-                        .attr('transform', 'translate(' + (width+margins.left) + ',' + margins.top + ')')
+                        .attr('transform', 'translate(' + (width+margins.left+10) + ',' + margins.top + ')')
 
         var legendLines=legend.selectAll("g")
                               .data(data)
@@ -82,17 +90,14 @@
         .attr('y', 0)
         .text(function(d){return d.name})
 
-        var xAxis = d3.axisBottom(xScale);
-        svg.append("g").classed("xAxis",true)
-        .call(xAxis)
-        .attr('transform', 'translate(' + margins.left + ',' + (margins.top+height+15) + ')')
+        var yAxis = d3.axisLeft(yScale);
+        svg.append("g").classed("yAxis",true)
+        .call(yAxis)
+        .attr('transform', 'translate(' + margins.left + ',0)')
       }
 
 
   </script>
-  <svg>
-
-  </svg>
 
 </body>
 </html>
