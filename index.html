@@ -20,8 +20,8 @@
                       .attr("width",screen.width)
                       .attr("height",screen.height)
           var margins = {top: 10, right: 10, bottom: 10, left: 10};
-          var width =screen.width - margin.left -margins.right;
-          var height =screen.height - margin.top-margin.bottom;
+          var width =screen.width - margins.left -margins.right;
+          var height =screen.height - margins.top-margins.bottom;
 
           // scale
           var xScale = d3.scaleLinear()
@@ -55,7 +55,7 @@
 
           // legend
           var legend = svg.append("g")
-                          .classed("legend".true)
+                          .classed("legend",true)
                           .attr('transform', 'translate(' + (width+margins.left) + ',' + margins.top + ')')
 
           var legendLines=legend.selectAll("g")
@@ -87,5 +87,8 @@
     }
 
   </script>
+  <svg>
+    
+  </svg>
 </body>
 </html>
