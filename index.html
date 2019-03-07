@@ -1,0 +1,91 @@
+<html>
+<head>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+<body>
+  <script type="text/javascript">
+
+    var grade =d3.json('gradeData.json');
+
+    grade.then(function(data){
+              drawChart(data);
+            }
+        )
+
+    var drawChart =function(data){
+
+          // math variable
+          var screen={width:500,height:400};
+          var svg = d3.select("svg")
+                      .attr("width",screen.width)
+                      .attr("height",screen.height)
+          var margins = {top: 10, right: 10, bottom: 10, left: 10};
+          var width =screen.width - margin.left -margins.right;
+          var height =screen.height - margin.top-margin.bottom;
+
+          // scale
+          var xScale = d3.scaleLinear()
+              .domain([0, 100])
+              .range([0,width]);
+          var yScale = d3.scaleLinear()
+              .domain([0, 100])
+              .range([height,0]);
+          var colors=d3.scaleOrdinal(d3.schemeAccent);
+
+          // draw chart
+          var plotLand = svg.append("g")
+                            .classed("plot",true)
+                            .attr('transform', 'translate(' + margins.left + ',' + margins.top + ')')
+
+
+          var students = plotLand.selectAll("g")
+                                 .data(data)
+                                 .enter()
+                                 .append("g")
+                                 .attr("fill",function(d){return colors(d.name)})
+
+          students.selectAll("circle")
+                  .data(function(d){return d.grades})
+                  .enter()
+                  .append("circle")
+                  .attr('cx',function(d,i){return xScale(i)})
+                  .attr('cy',function(d){return yScale(d)})
+                  .attr('r', 10)
+
+
+          // legend
+          var legend = svg.append("g")
+                          .classed("legend".true)
+                          .attr('transform', 'translate(' + (width+margins.left) + ',' + margins.top + ')')
+
+          var legendLines=legend.selectAll("g")
+                                .data(data)
+                                .enter()
+                                .append("g")
+                                .classed("legendLines",true)
+                                .attr('transform', function(d,i){
+                                  return "translate(0,"+(i*20)+")"
+                                })
+
+          legendLines.append("rect")
+          .attr('x', 0)
+          .attr('y', 0)
+          .attr('width', 10)
+          .attr('height', 10)
+          .attr('fill', function(d){return colors(d.name)})
+
+          legendLines.append("text")
+          .attr('x', 20)
+          .attr('y', 0)
+          .text(function(d){return d.name})
+
+          var xAxis = d3.axisBottom(xScale);
+          svg.append("g").classed("xAxis",true)
+          .call(xAxis)
+          .attr('transform', 'translate(' + margins.left + ',' + (margins.top+height) + ')')
+
+    }
+
+  </script>
+</body>
+</html>
